@@ -109,6 +109,17 @@ def analyse_meta(soup=None, analyse_elements=None, website=None):
     return unflatten(meta_data_dict, separator="__")
 
 
+def analyse_headings(soup=None):
+    headings_dict = {}
+    for selector in ["h1", "h2", "h3", "h4", "h5", "h6", "h7"]:
+        elems = soup.select(selector)
+        data = []
+        for el in elems:
+            data.append(clean_text(el.get_text()).replace("\n", " "))
+        headings_dict[selector] = data
+    return headings_dict
+
+
 def analyse(page_text=None, url=None, analyse_elements=None):
     if analyse_elements is None:
         analyse_elements = ELEMENTS_TO_ANALYSE_FOR_LINKS
@@ -130,6 +141,7 @@ def analyse(page_text=None, url=None, analyse_elements=None):
     meta_data = analyse_meta(soup=soup, analyse_elements=analyse_elements, website=website)
     result['links'] = links
     result['meta'] = meta_data
+    result['headings'] = analyse_headings(soup=soup)
     return {
         "status": "success",
         "result": result
