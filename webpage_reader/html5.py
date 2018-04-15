@@ -2,6 +2,7 @@ import requests
 import logging
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
+from flatten_json import unflatten
 
 ELEMENTS_TO_ANALYSE_FOR_LINKS = [
     {
@@ -98,18 +99,14 @@ def analyse_links(soup=None, analyse_elements=None, website=None):
 
 
 def analyse_meta(soup=None, analyse_elements=None, website=None):
-    meta_data_list = []
+    meta_data_dict = {}
     all_meta_elems = soup.select('meta')
     for meta_elem in all_meta_elems:
         meta_property = meta_elem.get('property')
         if meta_property:
-            data = {
-                "property": meta_property.replace(":", "__"),
-                "content": meta_elem.get('content')
-            }
-            meta_data_list.append(data)
+            meta_data_dict[meta_property.replace(":", "__")] = meta_elem.get('content')
 
-    return meta_data_list
+    return unflatten(meta_data_dict, separator="__")
 
 
 def analyse(page_text=None, url=None, analyse_elements=None):
