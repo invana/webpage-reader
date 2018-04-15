@@ -31,6 +31,10 @@ ELEMENTS_TO_ANALYSE_FOR_LINKS = [
 ]
 
 
+def clean_text(text):
+    return text.strip()
+
+
 def read_page(url=None, headers=None):
     """
     this method just reads a page and returns text of the page
@@ -63,12 +67,12 @@ def analyse_links(soup=None, analyse_elements=None):
             selected_elems = soup.select(selector)
             for elem in selected_elems:
                 el_href = elem.get('href')
-                el_title = elem.get_text().strip()
+                el_title = elem.get_text()
                 # TODO - make the url absolute url
                 if el_href:
                     selected_elems_data.append({
                         'url': el_href,
-                        'title': el_title
+                        'title': clean_text(el_title)
                     })
         links[element['selector_name']] = selected_elems_data
     return links
@@ -87,7 +91,7 @@ def analyse(url=None, headers=None, analyse_elements=None):
     soup = BeautifulSoup(page_text, 'html.parser')
 
     result = {}
-    result['title'] = soup.title.string
+    result['title'] = clean_text(soup.title.string)
     result['url'] = url
     links = analyse_links(soup=soup, analyse_elements=analyse_elements)
     result['links'] = links
