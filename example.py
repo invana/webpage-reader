@@ -1,8 +1,8 @@
-from webpage_reader import analyse
+from webpage_reader import analyse, read_page
 
-# result = analyse(url="https://stackoverflow.com/questions/18121715/i-cannot-import-beautiful-soup-on-python", )
-# result = analyse(url="https://www.tutorialrepublic.com/html-reference/html5-tags.php", )
-# result = analyse(url="https://github.com/invanatech/page-reader", )
-result = analyse(url="https://moz.com/blog/sustainable-link-building", )
+url = "https://moz.com/blog/sustainable-link-building"
+headers = {}
+page_text = read_page(url=url, headers=headers)
+result = analyse(page_text=page_text, url=url)
 print(result)
-# print(result['result']['meta'])
+

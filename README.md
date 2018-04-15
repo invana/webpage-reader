@@ -18,10 +18,15 @@ pip install git+https://github.com/invanatech/webpage-reader#egg=webpage_reader
 ## Usage
 
 ```python
-from webpage_reader import analyse
 
-result = analyse(url="https://github.com/invanatech/webpage-reader", )
+from webpage_reader import analyse, read_page
+
+url="https://github.com/invanatech/webpage-reader"
+headers = {}
+page_text = read_page(url=url, headers=headers)
+result = analyse(page_text=page_text, url=url)
 print(result)
+
 
 {
   'status':'success',

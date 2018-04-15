@@ -104,7 +104,7 @@ def analyse_meta(soup=None, analyse_elements=None, website=None):
         meta_property = meta_elem.get('property')
         if meta_property:
             data = {
-                "property": meta_property.replace(":", "_"),
+                "property": meta_property.replace(":", "__"),
                 "content": meta_elem.get('content')
             }
             meta_data_list.append(data)
@@ -112,11 +112,12 @@ def analyse_meta(soup=None, analyse_elements=None, website=None):
     return meta_data_list
 
 
-def analyse(url=None, headers=None, analyse_elements=None):
+def analyse(page_text=None, url=None, analyse_elements=None):
     if analyse_elements is None:
         analyse_elements = ELEMENTS_TO_ANALYSE_FOR_LINKS
 
-    page_text = read_page(url=url, headers=headers)
+    if url is None:
+        raise Exception("both url and page_text should be passes to analyse() function")
     if page_text is None:
         return {
             "status": "cannot_read_page",
