@@ -63,7 +63,7 @@ def analyse_links(soup=None, analyse_elements=None):
             selected_elems = soup.select(selector)
             for elem in selected_elems:
                 el_href = elem.get('href')
-                el_title = elem.get('text')
+                el_title = elem.get_text().strip()
                 # TODO - make the url absolute url
                 if el_href:
                     selected_elems_data.append({
