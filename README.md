@@ -20,19 +20,19 @@ pip install git+https://github.com/invanatech/webpage-reader
 ```python
 from webpage_reader import analyse
 
-result = analyse(url="https://github.com/invanatech/page-reader", )
+result = analyse(url="https://github.com/invanatech/webpage-reader", )
 print(result)
 
 {
   'status':'success',
   'result':{
     'title':'GitHub - invanatech/webpage-reader: Reads a webpage and extracts the information out of it, based on the HTML5 tags/classes',
-    'url':'https://github.com/invanatech/page-reader',
+    'url':'https://github.com/invanatech/webpage-reader',
     'website':'https://github.com',
     'links':{
       'article_links':[
         {
-          'url':'https://github.com/#page-reader',
+          'url':'https://github.com/#webpage-reader',
           'title':''
         }
       ],
