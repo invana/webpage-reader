@@ -23,10 +23,10 @@ ELEMENTS_TO_ANALYSE_FOR_LINKS = [
         "selectors": ["aside a", ".aside a"],
         "selector_name": "aside_nav_links"
     },
-    {
-        "selectors": ["a"],
-        "selector_name": "all_links"
-    }
+    # {
+    #     "selectors": ["a"],
+    #     "selector_name": "all_links"
+    # }
 
 ]
 
@@ -60,10 +60,11 @@ def analyse_links(soup=None, analyse_elements=None):
     for element in analyse_elements:
         selected_elems_data = []
         for selector in element['selectors']:
-            selected_elems = soup.find_all(selector)
+            selected_elems = soup.select(selector)
             for elem in selected_elems:
                 el_href = elem.get('href')
                 el_title = elem.get('title')
+                # TODO - make the url absolute url
                 if el_href:
                     selected_elems_data.append({
                         'url': el_href,
