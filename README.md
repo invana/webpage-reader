@@ -11,7 +11,7 @@ the HTML5 tags.
 ## Installation
 
 ```bash
-pip install git+https://github.com/invanatech/webpage-reader
+pip install git+https://github.com/invanatech/webpage-reader#egg=webpage_reader
 ```
 
 
