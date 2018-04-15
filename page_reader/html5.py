@@ -2,25 +2,25 @@ import requests
 import logging
 from bs4 import BeautifulSoup
 
-ELEMENTS_TO_ANALYSE = [
+ELEMENTS_TO_ANALYSE_FOR_LINKS = [
     {
-        "selector": "article a",
+        "selectors": ["article a", ".article a"],
         "selector_name": "article_links"
     },
     {
-        "selector": "header a",
+        "selectors": ["header a", ".header a"],
         "selector_name": "header_nav_links"
     },
     {
-        "selector": "footer a",
+        "selectors": ["footer a", ".footer a"],
         "selector_name": "footer_nav_links"
     },
     {
-        "selector": "nav a",
+        "selectors": ["nav a", ".nav a"],
         "selector_name": "all_nav_links"
     },
     {
-        "selector": "aside a",
+        "selectors": ["aside a", ".aside a"],
         "selector_name": "aside_nav_links"
     }
 
@@ -54,23 +54,24 @@ def read_page(url=None, headers=None):
 def analyse_links(soup=None, analyse_elements=None):
     links = {}
     for element in analyse_elements:
-        selected_elems = soup.find_all(element['selector'])
         selected_elems_data = []
-        for elem in selected_elems:
-            el_href = elem.get('href')
-            el_title = elem.get('title')
-            if el_href:
-                selected_elems_data.append({
-                    'url': el_href,
-                    'title': el_title
-                })
+        for selector in element['selector']:
+            selected_elems = soup.find_all(selector)
+            for elem in selected_elems:
+                el_href = elem.get('href')
+                el_title = elem.get('title')
+                if el_href:
+                    selected_elems_data.append({
+                        'url': el_href,
+                        'title': el_title
+                    })
         links[element['selector_name']] = selected_elems_data
     return links
 
 
 def analyse(url=None, headers=None, analyse_elements=None):
     if analyse_elements is None:
-        analyse_elements = ELEMENTS_TO_ANALYSE
+        analyse_elements = ELEMENTS_TO_ANALYSE_FOR_LINKS
 
     page_text = read_page(url=url, headers=headers)
     if page_text is None:
