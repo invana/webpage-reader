@@ -1,6 +1,7 @@
 import requests
 import logging
 from bs4 import BeautifulSoup
+from urllib.parse import urlparse
 
 ELEMENTS_TO_ANALYSE_FOR_LINKS = [
     {
@@ -23,16 +24,22 @@ ELEMENTS_TO_ANALYSE_FOR_LINKS = [
         "selectors": ["aside a", ".aside a"],
         "selector_name": "aside_nav_links"
     },
-    # {
-    #     "selectors": ["a"],
-    #     "selector_name": "all_links"
-    # }
+    {
+        "selectors": ["a"],
+        "selector_name": "all_links"
+    }
 
 ]
 
 
 def clean_text(text):
     return text.strip()
+
+
+def get_website(url):
+    parsed_uri = urlparse(url)
+    website = '{uri.scheme}://{uri.netloc}'.format(uri=parsed_uri)
+    return website
 
 
 def read_page(url=None, headers=None):
@@ -59,7 +66,7 @@ def read_page(url=None, headers=None):
         return res.text
 
 
-def analyse_links(soup=None, analyse_elements=None):
+def analyse_links(soup=None, analyse_elements=None, website=None):
     links = {}
     for element in analyse_elements:
         selected_elems_data = []
@@ -68,7 +75,15 @@ def analyse_links(soup=None, analyse_elements=None):
             for elem in selected_elems:
                 el_href = elem.get('href')
                 el_title = elem.get_text()
-                # TODO - make the url absolute url
+                if el_href.startswith("//"):  # urls starting with //code.jquery.com/something.html
+                    el_href = "http:{}".format(el_href)  # TODO - http is hard coded for now
+                elif "://" not in el_href:  # urls like "example.html" or "/example.html"
+                    if el_href.startswith("/"):
+                        pass
+                    else:
+                        el_href = "/{}".format(el_href)
+                    el_href = "{}{}".format(website, el_href)
+
                 if el_href:
                     selected_elems_data.append({
                         'url': el_href,
@@ -89,11 +104,12 @@ def analyse(url=None, headers=None, analyse_elements=None):
             "result": {}
         }
     soup = BeautifulSoup(page_text, 'html.parser')
-
     result = {}
     result['title'] = clean_text(soup.title.string)
     result['url'] = url
-    links = analyse_links(soup=soup, analyse_elements=analyse_elements)
+    website = get_website(url)
+    result['website'] = website
+    links = analyse_links(soup=soup, analyse_elements=analyse_elements, website=website)
     result['links'] = links
     return {
         "status": "success",
