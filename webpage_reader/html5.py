@@ -75,22 +75,41 @@ def analyse_links(soup=None, analyse_elements=None, website=None):
             for elem in selected_elems:
                 el_href = elem.get('href')
                 el_title = elem.get_text()
-                if el_href.startswith("//"):  # urls starting with //code.jquery.com/something.html
-                    el_href = "http:{}".format(el_href)  # TODO - http is hard coded for now
-                elif "://" not in el_href:  # urls like "example.html" or "/example.html"
-                    if el_href.startswith("/"):
+                if el_href:
+                    if el_href.startswith("#"):
                         pass
                     else:
-                        el_href = "/{}".format(el_href)
-                    el_href = "{}{}".format(website, el_href)
+                        if el_href.startswith("//"):  # urls starting with //code.jquery.com/something.html
+                            el_href = "http:{}".format(el_href)  # TODO - http is hard coded for now
+                        elif "://" not in el_href:  # urls like "example.html" or "/example.html"
+                            if el_href.startswith("/"):
+                                pass
+                            else:
+                                el_href = "/{}".format(el_href)
+                            el_href = "{}{}".format(website, el_href)
 
-                if el_href:
-                    selected_elems_data.append({
-                        'url': el_href,
-                        'title': clean_text(el_title)
-                    })
+                        if el_href:
+                            selected_elems_data.append({
+                                'url': el_href,
+                                'title': clean_text(el_title)
+                            })
         links[element['selector_name']] = selected_elems_data
     return links
+
+
+def analyse_meta(soup=None, analyse_elements=None, website=None):
+    meta_data_list = []
+    all_meta_elems = soup.select('meta')
+    for meta_elem in all_meta_elems:
+        meta_property = meta_elem.get('property')
+        if meta_property:
+            data = {
+                "property": meta_property.replace(":", "_"),
+                "content": meta_elem.get('content')
+            }
+            meta_data_list.append(data)
+
+    return meta_data_list
 
 
 def analyse(url=None, headers=None, analyse_elements=None):
@@ -110,7 +129,9 @@ def analyse(url=None, headers=None, analyse_elements=None):
     website = get_website(url)
     result['website'] = website
     links = analyse_links(soup=soup, analyse_elements=analyse_elements, website=website)
+    meta_data = analyse_meta(soup=soup, analyse_elements=analyse_elements, website=website)
     result['links'] = links
+    result['meta'] = meta_data
     return {
         "status": "success",
         "result": result
