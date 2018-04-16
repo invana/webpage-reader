@@ -21,7 +21,7 @@ pip install git+https://github.com/invanatech/webpage-reader#egg=webpage_reader
 
 from webpage_reader import analyse, read_page
 
-url="https://github.com/invanatech/webpage-reader"
+url="https://moz.com/blog/sustainable-link-building"
 headers = {}
 page_text = read_page(url=url, headers=headers)
 result = analyse(page_text=page_text, url=url)
