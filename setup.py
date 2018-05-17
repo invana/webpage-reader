@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name='webpage-reader',
     version='0.0.1',
-    packages=['page_reader'],
+    packages=['webpage_reader'],
     url='https://github.com/invanatech/webpage-reader',
     license='MIT License',
     author='rrmerugu',
