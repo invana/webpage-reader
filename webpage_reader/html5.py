@@ -32,6 +32,17 @@ ELEMENTS_TO_ANALYSE_FOR_LINKS = [
 
 ]
 
+IGNORE_HTML_CATS = [
+    'script',
+    'styles',
+    'svg',
+    'form',
+    'input',
+    'button',
+    'path',
+    'textarea'
+]
+
 
 def clean_text(text):
     return text.strip()
@@ -109,6 +120,19 @@ def analyse_meta(soup=None, analyse_elements=None, website=None):
     return unflatten(meta_data_dict, separator="__")
 
 
+def extract_texts_list(soup=None):
+    texts_list = []
+    body = soup.select('body')[0]
+
+    # print (body.find_all())
+    for el in body.find_all():
+        # print (type(el))
+        if el.name not in IGNORE_HTML_CATS:
+            print(el.name)
+            texts_list.append(el.get_text())
+    return texts_list
+
+
 def analyse_headings(soup=None):
     headings_dict = {}
     for selector in ["h1", "h2", "h3", "h4", "h5", "h6", "h7"]:
@@ -138,10 +162,14 @@ def analyse(page_text=None, url=None, analyse_elements=None):
     website = get_website(url)
     result['website'] = website
     links = analyse_links(soup=soup, analyse_elements=analyse_elements, website=website)
-    meta_data = analyse_meta(soup=soup, analyse_elements=analyse_elements, website=website)
     result['links'] = links
-    result['meta'] = meta_data
+    try:
+        meta_data = analyse_meta(soup=soup, analyse_elements=analyse_elements, website=website)
+        result['meta'] = meta_data
+    except Exception as e:
+        print (e)
     result['headings'] = analyse_headings(soup=soup)
+    result['texts'] = extract_texts_list(soup=soup)
     return {
         "status": "success",
         "result": result
