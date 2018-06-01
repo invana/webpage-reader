@@ -123,12 +123,8 @@ def analyse_meta(soup=None, analyse_elements=None, website=None):
 def extract_texts_list(soup=None):
     texts_list = []
     body = soup.select('body')[0]
-
-    # print (body.find_all())
     for el in body.find_all():
-        # print (type(el))
         if el.name not in IGNORE_HTML_CATS:
-            print(el.name)
             texts_list.append(el.get_text())
     return texts_list
 
