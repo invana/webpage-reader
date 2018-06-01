@@ -166,15 +166,17 @@ def analyse(page_text=None, url=None, analyse_elements=None):
     result['website'] = website
     try:
         links = analyse_links(soup=soup, analyse_elements=analyse_elements, website=website)
-        result['links'] = links
-
     except Exception as e:
+        links = []
         print(e)
+    result['links'] = links
+
     try:
         meta_data = analyse_meta(soup=soup, analyse_elements=analyse_elements, website=website)
-        result['meta'] = meta_data
     except Exception as e:
+        meta_data = {}
         print(e)
+    result['meta'] = meta_data
     result['headings'] = analyse_headings(soup=soup)
     result['texts'] = extract_texts_list(soup=soup)
     return {
