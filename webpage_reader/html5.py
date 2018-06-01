@@ -157,17 +157,24 @@ def analyse(page_text=None, url=None, analyse_elements=None):
         }
     soup = BeautifulSoup(page_text, 'html.parser')
     result = {}
-    result['title'] = clean_text(soup.title.string)
+    if soup.title:
+        result['title'] = clean_text(soup.title.string)
+    else:
+        result['title'] = None
     result['url'] = url
     website = get_website(url)
     result['website'] = website
-    links = analyse_links(soup=soup, analyse_elements=analyse_elements, website=website)
-    result['links'] = links
+    try:
+        links = analyse_links(soup=soup, analyse_elements=analyse_elements, website=website)
+        result['links'] = links
+
+    except Exception as e:
+        print(e)
     try:
         meta_data = analyse_meta(soup=soup, analyse_elements=analyse_elements, website=website)
         result['meta'] = meta_data
     except Exception as e:
-        print (e)
+        print(e)
     result['headings'] = analyse_headings(soup=soup)
     result['texts'] = extract_texts_list(soup=soup)
     return {
