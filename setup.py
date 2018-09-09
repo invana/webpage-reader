@@ -1,5 +1,4 @@
 from setuptools import setup
-from pip.req import parse_requirements
 
 with open('requirements.txt', 'r') as f:
     install_reqs = [
