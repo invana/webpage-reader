@@ -1,12 +1,5 @@
 from setuptools import setup
 
-with open('requirements.txt', 'r') as f:
-    install_reqs = [
-        s for s in [
-            line.strip(' \n') for line in f
-        ] if not s.startswith('#') and s != ''
-    ]
-
 setup(
     name='webpage-reader',
     version='0.0.4',
