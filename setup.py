@@ -9,7 +9,7 @@ with open('requirements.txt', 'r') as f:
     
 setup(
     name='webpage-reader',
-    version='0.0.1',
+    version='0.0.3',
     packages=['webpage_reader'],
     url='https://github.com/invanatech/webpage-reader',
     license='MIT License',
